@@ -3,17 +3,17 @@
   <head>
     <title>Questionário</title>
     <meta charset="UTF-8">
-    <!-- Link para o CSS do Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   </head>
   <body>
     <div class="container">
       <h1>Questionário</h1>
-      <form id="quiz-form">
+      <form id="quiz">
         <div class="form-group">
-          <label for="q1">Questão 1 - Qual é o resultado da expressão 3x² + 2x - 1 para x = 4?</label>
+          <label for="q1">1. Qual é o resultado da expressão 3x² + 2x - 1 para x = 4?</label>
           <select class="form-control" id="q1">
-            <option value="">Selecione uma resposta</option>
+            <option value="">Selecione uma resposta...</option>
             <option value="a">31</option>
             <option value="b">57</option>
             <option value="c">65</option>
@@ -21,9 +21,9 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="q2">Questão 2 - Qual é o perímetro de um quadrado de área 81 cm²?</label>
+          <label for="q2">2. Qual é o perímetro de um quadrado de área 81 cm²?</label>
           <select class="form-control" id="q2">
-            <option value="">Selecione uma resposta</option>
+            <option value="">Selecione uma resposta...</option>
             <option value="a">27 cm</option>
             <option value="b">36 cm</option>
             <option value="c">45 cm</option>
@@ -31,9 +31,9 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="q3">Questão 3 - Uma loja vende um produto por R$ 120,00 com um lucro de 20%. Qual é o custo desse produto para a loja?</label>
+          <label for="q3">3. Uma loja vende um produto por R$ 120,00 com um lucro de 20%. Qual é o custo desse produto para a loja?</label>
           <select class="form-control" id="q3">
-            <option value="">Selecione uma resposta</option>
+            <option value="">Selecione uma resposta...</option>
             <option value="a">R$ 80,00</option>
             <option value="b">R$ 96,00</option>
             <option value="c">R$ 100,00</option>
@@ -41,9 +41,9 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="q4">Questão 4 - Seis anos atrás, a idade de um pai era o triplo da idade de seu filho. Hoje, a idade do pai é o dobro da idade do filho. Qual é a idade atual do filho?</label>
+          <label for="q4">4. Seis anos atrás, a idade de um pai era o triplo da idade de seu filho. Hoje, a idade do pai é o dobro da idade do filho. Qual é a idade atual do filho?</label>
           <select class="form-control" id="q4">
-            <option value="">Selecione uma resposta</option>
+            <option value="">Selecione uma resposta...</option>
             <option value="a">8 anos</option>
             <option value="b">10 anos</option>
             <option value="c">12 anos</option>
@@ -51,86 +51,62 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="q5">Questão 5 - Em uma sala de aula com 30 alunos, 60% são meninos. Quantas meninas há na sala?</label>
+          <label for="q5">5. Em uma sala de aula com 30 alunos, 60% são meninos. Quantas meninas há na sala?</label>
           <select class="form-control" id="q5">
-            <option value="">Selecione uma resposta</option>
+            <option value="">Selecione uma resposta...</option>
             <option value="a">10 meninas</option>
             <option value="b">12 meninas</option>
             <option value="c">14 meninas</option>
             <option value="d">18 meninas</option>
           </select>
-       </div>
-    <button type="submit" class="btn btn-primary">Enviar respostas</button>
-  </form>
-  <div id="result" style="display:none;">
-    <h2>Resultado</h2>
-    <p>Respostas corretas: <span id="correct"></span></p>
-    <p>Respostas erradas: <span id="incorrect"></span></p>
-  </div>
-</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Verificar Respostas</button>
+      </form>
+      <div id="result">
+        <p>Total de respostas corretas: <span id="num-correct"></span></p>
+        <p>Total de respostas incorretas: <span id="num-incorrect"></span></p>
+        <p>Respostas corretas: <span id="correct-answers"></span></p>
+        <p>Respostas incorretas: <span id="incorrect-answers"></span></p>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+      $(function() {
+        $("#quiz").submit(function(event) {
+          event.preventDefault();
 
-<!-- Link para o JavaScript do Bootstrap -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-  // Definir as respostas corretas para cada pergunta
-  const answers = {
-    q1: "c",
-    q2: "b",
-    q3: "b",
-    q4: "a",
-    q5: "c"
-  };
+          const correctAnswers = ["a", "b", "c", "b", "d"];
+          const userAnswers = [
+            $("#q1").val(),
+            $("#q2").val(),
+            $("#q3").val(),
+            $("#q4").val(),
+            $("#q5").val()
+          ];
 
-  // Selecionar o formulário e o resultado
-  const quizForm = document.getElementById("quiz-form");
-  const result = document.getElementById("result");
+          let numCorrect = 0;
+          let numIncorrect = 0;
+          const correctAnswersText = [];
+          const incorrectAnswersText = [];
 
-  // Adicionar um ouvinte de evento para o envio do formulário
-  quizForm.addEventListener("submit", function(event) {
-    // Impedir o envio padrão do formulário
-    event.preventDefault();
+          for (let i = 0; i < correctAnswers.length; i++) {
+            if (userAnswers[i] === correctAnswers[i]) {
+              numCorrect++;
+              correctAnswersText.push(`${i + 1}`);
+            } else {
+              numIncorrect++;
+              incorrectAnswersText.push(`${i + 1}`);
+            }
+          }
 
-    // Obter as respostas do usuário
-    const q1Answer = document.getElementById("q1").value;
-    const q2Answer = document.getElementById("q2").value;
-    const q3Answer = document.getElementById("q3").value;
-    const q4Answer = document.getElementById("q4").value;
-    const q5Answer = document.getElementById("q5").value;
-
-    // Contar o número de respostas corretas e incorretas
-    let numCorrect = 0;
-    let numIncorrect = 0;
-    if (q1Answer === answers.q1) {
-      numCorrect++;
-    } else {
-      numIncorrect++;
-    }
-    if (q2Answer === answers.q2) {
-      numCorrect++;
-    } else {
-      numIncorrect++;
-    }
-    if (q3Answer === answers.q3) {
-      numCorrect++;
-    } else {
-      numIncorrect++;
-    }
-    if (q4Answer === answers.q4) {
-      numCorrect++;
-    } else {
-      numIncorrect++;
-    }
-    if (q5Answer === answers.q5) {
-      numCorrect++;
-    } else {
-      numIncorrect++;
-    }
-
-    // Mostrar os resultados
-    document.getElementById("correct").textContent = numCorrect;
-    document.getElementById("incorrect").textContent = numIncorrect;
-    result.style.display = "block";
-  });
-</script>
-</body>
+          $("#num-correct").text(numCorrect);
+          $("#num-incorrect").text(numIncorrect);
+          $("#correct-answers").text(correctAnswersText.join(", "));
+          $("#incorrect-answers").text(incorrectAnswersText.join(", "));
+        });
+      });
+    </script>
+  </body>
 </html>
+
+
